@@ -19,7 +19,6 @@
 #define I2C_ADDRESS 0x3C
 
 #define ADC_PIN 28
-#define BUTTON_A 5
 
 // Constantes
 #define R_KNOWN 10000        // Resistor conhecido de 10kΩ
@@ -73,7 +72,7 @@ float read_adc_average() {
 
 // Calcula o valor do resistor desconhecido baseado na média lida
 float calculate_unknown_resistor(float adc_value) {
-    return (R_KNOWN * adc_value) / (ADC_RESOLUTION - adc_value);
+    return (ADC_RESOLUTION * R_KNOWN) / adc_value;
 }
 
 // Encontra o valor comercial mais próximo da série E24
