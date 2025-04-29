@@ -72,7 +72,7 @@ float read_adc_average() {
 
 // Calcula o valor do resistor desconhecido baseado na média lida
 float calculate_unknown_resistor(float adc_value) {
-    return (ADC_RESOLUTION * R_KNOWN) / adc_value;
+    return (R_KNOWN * adc_value) / (ADC_RESOLUTION - adc_value);
 }
 
 // Encontra o valor comercial mais próximo da série E24
@@ -163,8 +163,8 @@ int main() {
     init_adc();
 
     // Ininicializa variáveis utilizadas no loop
-    char adc_str[5];
-    char resistor_str[8];
+    char adc_str[10];
+    char resistor_str[10];
     char color1[10], color2[10], multiplier[10];
     bool invert_colors = true;
 
