@@ -162,6 +162,7 @@ int main() {
     init_display(&display);
     init_adc();
 
+    
     // Ininicializa variáveis utilizadas no loop
     char adc_str[10];
     char resistor_str[10];
