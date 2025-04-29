@@ -1,12 +1,58 @@
-# Interface Homem-Máquina com Display OLED - RP2040 (BitDogLab)
+# Ohmímetro com Display OLED SSD1306 e ADC do Raspberry Pi Pico
 
-# Descrição
+## Descrição
+Projeto de um **ohmímetro digital** utilizando:
+- **Raspberry Pi Pico** como microcontrolador
+- **Display OLED SSD1306** para exibição dos valores
+- Leitura da resistência desconhecida usando o **ADC interno**
+- Identificação automática do valor comercial mais próximo (série **E24**)
+- Exibição do **código de cores** correspondente ao resistor
 
-Este projeto foi desenvolvido a placa BitDogLab. Tem como objetivo criar uma interface homem-máquina (IHM) utilizando um display OLED modelo "SSD1306" (resolução 128x64 pixels).
+## Funcionalidades
+- Mede a resistência de um componente desconhecido baseado em um divisor de tensão.
+- Calcula e exibe o valor mais próximo da série E24 (5% de tolerância).
+- Mostra também o código de cores correspondente ao valor encontrado.
+- Atualiza o display a cada ~700 ms com efeito de inversão de cores.
 
-A aplicação exibe informações em tempo real dos potenciômetros do joystick, como a leitura dos eixos X e Y. Também exibe o estado dos botões físicos e do botão do joystick. As informações são mostradas de forma organizada no display OLED via interface I2C, objetivando
-o estudo/aprendizado das funções da biblioteca do display.
+## Hardware Necessário
+- Raspberry Pi Pico
+- Display OLED SSD1306 (I2C)
+- Resistor conhecido de **10 kΩ**
+- Protoboard e jumpers
+- Resistores variados para teste
 
-Observação.
-- Implementação do modo BOOTSEL por botão externo (Botão B - GPIO 6). Isto facilita a gravação no desenvolvimento do programa. Quando o projeto for finalizado, deve-se retirar
-esta função.
+## Conexões
+| Pino Pico | Função       | Ligação OLED |
+|:----------|:-------------|:------------|
+| GPIO14    | I2C SDA      | SDA          |
+| GPIO15    | I2C SCL      | SCL          |
+| 3V3(OUT)  | Alimentação  | VCC          |
+| GND       | Terra        | GND          |
+| GPIO28    | Leitura ADC  | Divisor de tensão |
+
+## Dependências
+- `pico/stdlib.h`
+- `hardware/adc.h`
+- `hardware/i2c.h`
+- Biblioteca personalizada para OLED: `lib/ssd1306.h`
+- Fonte personalizada: `lib/font.h`
+
+**Obs**: As bibliotecas `ssd1306` e `font` devem estar disponíveis no projeto.
+
+## Como Funciona
+1. Inicializa o display OLED e o ADC do Pico.
+2. Lê 500 amostras do ADC para maior precisão.
+3. Calcula o valor do resistor desconhecido usando a fórmula do divisor de tensão.
+4. Ajusta o valor para o resistor mais próximo da série E24.
+5. Converte esse valor para o código de cores.
+6. Atualiza o display com os valores e cores.
+
+## Fórmulas Utilizadas
+- **Cálculo do Resistor Desconhecido**:
+  \[
+  R_{desconhecido} = \frac{R_{conhecido} \times V_{adc}}{V_{ref} - V_{adc}}
+  \]
+  (ajustado para os parâmetros do Pico)
+
+## Autor
+Levi Silva Freitas
